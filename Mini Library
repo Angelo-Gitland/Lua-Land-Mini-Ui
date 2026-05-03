@@ -15,6 +15,7 @@ local ThemesDict = {
 		SecondaryText = Color3.fromRGB(160, 160, 160),
 		AccentColor   = Color3.fromRGB(0, 170, 255),
 		Divider       = Color3.fromRGB(35, 35, 35),
+		InputBg       = Color3.fromRGB(30, 30, 30),
 	}
 }
 
@@ -57,7 +58,7 @@ function LuaLandMini:CreateWindow(Config)
 	TBCorner.Parent = TitleBar
 
 	local TitleLabel = Instance.new("TextLabel")
-	TitleLabel.Size = UDim2.new(1, -60, 1, 0)
+	TitleLabel.Size = UDim2.new(1, -70, 1, 0)
 	TitleLabel.Position = UDim2.new(0, 10, 0, 0)
 	TitleLabel.BackgroundTransparency = 1
 	TitleLabel.Text = Title
@@ -69,8 +70,8 @@ function LuaLandMini:CreateWindow(Config)
 	TitleLabel.Parent = TitleBar
 
 	local ButtonHolder = Instance.new("Frame")
-	ButtonHolder.Size = UDim2.new(0, 50, 1, 0)
-	ButtonHolder.Position = UDim2.new(1, -55, 0, 0)
+	ButtonHolder.Size = UDim2.new(0, 60, 1, 0)
+	ButtonHolder.Position = UDim2.new(1, -65, 0, 0)
 	ButtonHolder.BackgroundTransparency = 1
 	ButtonHolder.ZIndex = 11
 	ButtonHolder.Parent = TitleBar
@@ -79,26 +80,26 @@ function LuaLandMini:CreateWindow(Config)
 	BHLayout.FillDirection = Enum.FillDirection.Horizontal
 	BHLayout.HorizontalAlignment = Enum.HorizontalAlignment.Right
 	BHLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-	BHLayout.Padding = UDim.new(0, 5)
+	BHLayout.Padding = UDim.new(0, 8)
 	BHLayout.Parent = ButtonHolder
-
-	local CloseBtn = Instance.new("TextButton")
-	CloseBtn.Size = UDim2.new(0, 20, 0, 20)
-	CloseBtn.BackgroundTransparency = 1
-	CloseBtn.Text = "X"
-	CloseBtn.TextColor3 = T.PrimaryText
-	CloseBtn.TextSize = 14
-	CloseBtn.Font = Enum.Font.GothamBold
-	CloseBtn.Parent = ButtonHolder
 
 	local MinimizeBtn = Instance.new("TextButton")
 	MinimizeBtn.Size = UDim2.new(0, 20, 0, 20)
 	MinimizeBtn.BackgroundTransparency = 1
-	MinimizeBtn.Text = "-"
+	MinimizeBtn.Text = "—"
 	MinimizeBtn.TextColor3 = T.PrimaryText
-	MinimizeBtn.TextSize = 18
+	MinimizeBtn.TextSize = 14
 	MinimizeBtn.Font = Enum.Font.GothamBold
+	MinimizeBtn.ZIndex = 12
 	MinimizeBtn.Parent = ButtonHolder
+
+	local CloseBtn = Instance.new("ImageButton")
+	CloseBtn.Size = UDim2.new(0, 16, 0, 16)
+	CloseBtn.BackgroundTransparency = 1
+	CloseBtn.Image = "rbxassetid://130629964514885"
+	CloseBtn.ImageColor3 = T.PrimaryText
+	CloseBtn.ZIndex = 12
+	CloseBtn.Parent = ButtonHolder
 
 	local ContentScroll = Instance.new("ScrollingFrame")
 	ContentScroll.Size = UDim2.new(1, 0, 1, -TITLE_H)
@@ -118,7 +119,7 @@ function LuaLandMini:CreateWindow(Config)
 	local function UpdateMainHeight()
 		if not IsMinimized then
 			local totalHeight = TITLE_H + ContentLayout.AbsoluteContentSize.Y
-			TweenService:Create(MainFrame, TweenInfo.new(0.25), {Size = UDim2.new(0, UI_WIDTH, 0, totalHeight)}):Play()
+			TweenService:Create(MainFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quart), {Size = UDim2.new(0, UI_WIDTH, 0, totalHeight)}):Play()
 		end
 	end
 
@@ -128,7 +129,7 @@ function LuaLandMini:CreateWindow(Config)
 		IsMinimized = not IsMinimized
 		ContentScroll.Visible = not IsMinimized
 		if IsMinimized then
-			TweenService:Create(MainFrame, TweenInfo.new(0.25), {Size = UDim2.new(0, UI_WIDTH, 0, TITLE_H)}):Play()
+			TweenService:Create(MainFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quart), {Size = UDim2.new(0, UI_WIDTH, 0, TITLE_H)}):Play()
 		else
 			UpdateMainHeight()
 		end
@@ -177,8 +178,8 @@ function LuaLandMini:CreateWindow(Config)
 		SText.Parent = SectionFrame
 
 		local ArrowIcon = Instance.new("ImageLabel")
-		ArrowIcon.Size = UDim2.new(0, 16, 0, 16)
-		ArrowIcon.Position = UDim2.new(1, -26, 0.5, -8)
+		ArrowIcon.Size = UDim2.new(0, 14, 0, 14)
+		ArrowIcon.Position = UDim2.new(1, -24, 0.5, -7)
 		ArrowIcon.BackgroundTransparency = 1
 		ArrowIcon.Image = "rbxassetid://11552476728"
 		ArrowIcon.ImageColor3 = T.SecondaryText
@@ -200,7 +201,7 @@ function LuaLandMini:CreateWindow(Config)
 			if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
 				IsOpen = not IsOpen
 				local targetHeight = IsOpen and CLayout.AbsoluteContentSize.Y or 0
-				TweenService:Create(Container, TweenInfo.new(0.25), {Size = UDim2.new(1, 0, 0, targetHeight)}):Play()
+				TweenService:Create(Container, TweenInfo.new(0.25, Enum.EasingStyle.Quart), {Size = UDim2.new(1, 0, 0, targetHeight)}):Play()
 				TweenService:Create(ArrowIcon, TweenInfo.new(0.25), {Rotation = IsOpen and 180 or 0}):Play()
 				task.wait(0.26)
 				UpdateMainHeight()
@@ -239,21 +240,25 @@ function LuaLandMini:CreateWindow(Config)
 
 		function SectionHandling:CreateTextbox(Placeholder, Callback)
 			local BoxFrame = Instance.new("Frame")
-			BoxFrame.Size = UDim2.new(1, 0, 0, 34)
+			BoxFrame.Size = UDim2.new(1, 0, 0, 42)
 			BoxFrame.BackgroundTransparency = 1
 			BoxFrame.Parent = Container
 
 			local Box = Instance.new("TextBox")
-			Box.Size = UDim2.new(0.9, 0, 0.7, 0)
-			Box.Position = UDim2.new(0.05, 0, 0.15, 0)
-			Box.BackgroundColor3 = T.SectionBg
+			Box.Size = UDim2.new(0.9, 0, 0.65, 0)
+			Box.Position = UDim2.new(0.05, 0, 0.175, 0)
+			Box.BackgroundColor3 = T.InputBg
 			Box.BorderSizePixel = 0
 			Box.PlaceholderText = Placeholder
 			Box.Text = ""
 			Box.TextColor3 = Color3.fromRGB(255, 255, 255)
 			Box.Font = Enum.Font.Gotham
-			Box.TextSize = 11
+			Box.TextSize = 10
 			Box.Parent = BoxFrame
+
+			local UICorner = Instance.new("UICorner")
+			UICorner.CornerRadius = UDim.new(0, 4)
+			UICorner.Parent = Box
 
 			Box.FocusLost:Connect(function(enter)
 				if enter then Callback(Box.Text) end
