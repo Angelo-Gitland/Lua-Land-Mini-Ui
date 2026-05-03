@@ -69,37 +69,27 @@ function LuaLandMini:CreateWindow(Config)
 	TitleLabel.ZIndex = 11
 	TitleLabel.Parent = TitleBar
 
-	local ButtonHolder = Instance.new("Frame")
-	ButtonHolder.Size = UDim2.new(0, 60, 1, 0)
-	ButtonHolder.Position = UDim2.new(1, -65, 0, 0)
-	ButtonHolder.BackgroundTransparency = 1
-	ButtonHolder.ZIndex = 11
-	ButtonHolder.Parent = TitleBar
-
-	local BHLayout = Instance.new("UIListLayout")
-	BHLayout.FillDirection = Enum.FillDirection.Horizontal
-	BHLayout.HorizontalAlignment = Enum.HorizontalAlignment.Right
-	BHLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-	BHLayout.Padding = UDim.new(0, 10)
-	BHLayout.Parent = ButtonHolder
+	local CloseBtn = Instance.new("ImageButton")
+	CloseBtn.Name = "CloseBtn"
+	CloseBtn.Size = UDim2.new(0, 14, 0, 14)
+	CloseBtn.Position = UDim2.new(1, -24, 0.5, -7)
+	CloseBtn.BackgroundTransparency = 1
+	CloseBtn.Image = "rbxassetid://130629964514885"
+	CloseBtn.ImageColor3 = T.PrimaryText
+	CloseBtn.ZIndex = 12
+	CloseBtn.Parent = TitleBar
 
 	local MinimizeBtn = Instance.new("TextButton")
-	MinimizeBtn.Size = UDim2.new(0, 15, 0, 20)
+	MinimizeBtn.Name = "MinimizeBtn"
+	MinimizeBtn.Size = UDim2.new(0, 14, 0, 14)
+	MinimizeBtn.Position = UDim2.new(1, -48, 0.5, -7)
 	MinimizeBtn.BackgroundTransparency = 1
 	MinimizeBtn.Text = "—"
 	MinimizeBtn.TextColor3 = T.PrimaryText
 	MinimizeBtn.TextSize = 12
 	MinimizeBtn.Font = Enum.Font.GothamBold
 	MinimizeBtn.ZIndex = 12
-	MinimizeBtn.Parent = ButtonHolder
-
-	local CloseBtn = Instance.new("ImageButton")
-	CloseBtn.Size = UDim2.new(0, 14, 0, 14)
-	CloseBtn.BackgroundTransparency = 1
-	CloseBtn.Image = "rbxassetid://130629964514885"
-	CloseBtn.ImageColor3 = T.PrimaryText
-	CloseBtn.ZIndex = 12
-	CloseBtn.Parent = ButtonHolder
+	MinimizeBtn.Parent = TitleBar
 
 	local ContentScroll = Instance.new("ScrollingFrame")
 	ContentScroll.Size = UDim2.new(1, 0, 1, -TITLE_H)
