@@ -80,21 +80,21 @@ function LuaLandMini:CreateWindow(Config)
 	BHLayout.FillDirection = Enum.FillDirection.Horizontal
 	BHLayout.HorizontalAlignment = Enum.HorizontalAlignment.Right
 	BHLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-	BHLayout.Padding = UDim.new(0, 8)
+	BHLayout.Padding = UDim.new(0, 10)
 	BHLayout.Parent = ButtonHolder
 
 	local MinimizeBtn = Instance.new("TextButton")
-	MinimizeBtn.Size = UDim2.new(0, 20, 0, 20)
+	MinimizeBtn.Size = UDim2.new(0, 15, 0, 20)
 	MinimizeBtn.BackgroundTransparency = 1
 	MinimizeBtn.Text = "—"
 	MinimizeBtn.TextColor3 = T.PrimaryText
-	MinimizeBtn.TextSize = 14
+	MinimizeBtn.TextSize = 12
 	MinimizeBtn.Font = Enum.Font.GothamBold
 	MinimizeBtn.ZIndex = 12
 	MinimizeBtn.Parent = ButtonHolder
 
 	local CloseBtn = Instance.new("ImageButton")
-	CloseBtn.Size = UDim2.new(0, 16, 0, 16)
+	CloseBtn.Size = UDim2.new(0, 14, 0, 14)
 	CloseBtn.BackgroundTransparency = 1
 	CloseBtn.Image = "rbxassetid://130629964514885"
 	CloseBtn.ImageColor3 = T.PrimaryText
@@ -239,12 +239,11 @@ function LuaLandMini:CreateWindow(Config)
 		end
 
 		function SectionHandling:CreateCheckbox(Text, Default, Callback)
-			local CheckFrame = Instance.new("TextButton")
-			CheckFrame.Size = UDim2.new(1, 0, 0, 30)
-			CheckFrame.BackgroundColor3 = T.ElementBg
-			CheckFrame.BorderSizePixel = 0
-			CheckFrame.Text = ""
-			CheckFrame.Parent = Container
+			local Row = Instance.new("Frame")
+			Row.Size = UDim2.new(1, 0, 0, 30)
+			Row.BackgroundColor3 = T.ElementBg
+			Row.BorderSizePixel = 0
+			Row.Parent = Container
 
 			local CText = Instance.new("TextLabel")
 			CText.Size = UDim2.new(1, -40, 1, 0)
@@ -255,18 +254,18 @@ function LuaLandMini:CreateWindow(Config)
 			CText.TextSize = 11
 			CText.Font = Enum.Font.Gotham
 			CText.TextXAlignment = Enum.TextXAlignment.Left
-			CText.Parent = CheckFrame
+			CText.Parent = Row
 
-			local OuterBox = Instance.new("Frame")
-			OuterBox.Size = UDim2.new(0, 18, 0, 18)
-			OuterBox.Position = UDim2.new(1, -30, 0.5, -9)
-			OuterBox.BackgroundColor3 = T.InputBg
-			OuterBox.BorderSizePixel = 0
-			OuterBox.Parent = CheckFrame
+			local CheckBox = Instance.new("ImageButton")
+			CheckBox.Size = UDim2.new(0, 18, 0, 18)
+			CheckBox.Position = UDim2.new(1, -30, 0.5, -9)
+			CheckBox.BackgroundColor3 = T.InputBg
+			CheckBox.BorderSizePixel = 0
+			CheckBox.Parent = Row
 
 			local BoxCorner = Instance.new("UICorner")
 			BoxCorner.CornerRadius = UDim.new(0, 4)
-			BoxCorner.Parent = OuterBox
+			BoxCorner.Parent = CheckBox
 
 			local CheckImage = Instance.new("ImageLabel")
 			CheckImage.Size = UDim2.new(0.8, 0, 0.8, 0)
@@ -275,10 +274,10 @@ function LuaLandMini:CreateWindow(Config)
 			CheckImage.Image = "rbxassetid://123505575168158"
 			CheckImage.ImageColor3 = T.AccentColor
 			CheckImage.Visible = Default
-			CheckImage.Parent = OuterBox
+			CheckImage.Parent = CheckBox
 
 			local Enabled = Default
-			CheckFrame.MouseButton1Click:Connect(function()
+			CheckBox.MouseButton1Click:Connect(function()
 				Enabled = not Enabled
 				CheckImage.Visible = Enabled
 				Callback(Enabled)
