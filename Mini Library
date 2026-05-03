@@ -1,0 +1,561 @@
+local LuaLandMini = {}
+local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+local CoreGui = game:GetService("CoreGui")
+
+local ThemesDict = {
+	["Default"] = {
+		WindowBg      = Color3.fromRGB(8, 8, 8),
+		TitleBg       = Color3.fromRGB(14, 14, 14),
+		SectionBg     = Color3.fromRGB(18, 18, 18),
+		ElementBg     = Color3.fromRGB(22, 22, 22),
+		DropdownBg    = Color3.fromRGB(16, 16, 16),
+		PrimaryText   = Color3.fromRGB(240, 240, 240),
+		SecondaryText = Color3.fromRGB(160, 160, 160),
+		AccentColor   = Color3.fromRGB(0, 170, 255),
+		Divider       = Color3.fromRGB(35, 35, 35),
+	},
+	["Darker"] = {
+		WindowBg      = Color3.fromRGB(3, 3, 3),
+		TitleBg       = Color3.fromRGB(6, 6, 6),
+		SectionBg     = Color3.fromRGB(10, 10, 10),
+		ElementBg     = Color3.fromRGB(13, 13, 13),
+		DropdownBg    = Color3.fromRGB(8, 8, 8),
+		PrimaryText   = Color3.fromRGB(210, 210, 210),
+		SecondaryText = Color3.fromRGB(130, 130, 130),
+		AccentColor   = Color3.fromRGB(0, 140, 220),
+		Divider       = Color3.fromRGB(22, 22, 22),
+	},
+	["Fire"] = {
+		WindowBg      = Color3.fromRGB(18, 5, 2),
+		TitleBg       = Color3.fromRGB(28, 8, 2),
+		SectionBg     = Color3.fromRGB(35, 12, 4),
+		ElementBg     = Color3.fromRGB(40, 14, 5),
+		DropdownBg    = Color3.fromRGB(30, 10, 3),
+		PrimaryText   = Color3.fromRGB(255, 230, 210),
+		SecondaryText = Color3.fromRGB(210, 140, 100),
+		AccentColor   = Color3.fromRGB(255, 90, 20),
+		Divider       = Color3.fromRGB(60, 20, 8),
+	},
+	["Blossom"] = {
+		WindowBg      = Color3.fromRGB(20, 8, 14),
+		TitleBg       = Color3.fromRGB(28, 10, 20),
+		SectionBg     = Color3.fromRGB(35, 14, 25),
+		ElementBg     = Color3.fromRGB(40, 16, 28),
+		DropdownBg    = Color3.fromRGB(28, 10, 20),
+		PrimaryText   = Color3.fromRGB(255, 225, 240),
+		SecondaryText = Color3.fromRGB(210, 160, 185),
+		AccentColor   = Color3.fromRGB(240, 90, 160),
+		Divider       = Color3.fromRGB(60, 22, 42),
+	},
+	["Snow"] = {
+		WindowBg      = Color3.fromRGB(185, 198, 215),
+		TitleBg       = Color3.fromRGB(165, 180, 200),
+		SectionBg     = Color3.fromRGB(150, 168, 192),
+		ElementBg     = Color3.fromRGB(138, 158, 182),
+		DropdownBg    = Color3.fromRGB(155, 172, 196),
+		PrimaryText   = Color3.fromRGB(12, 22, 45),
+		SecondaryText = Color3.fromRGB(35, 55, 90),
+		AccentColor   = Color3.fromRGB(30, 90, 200),
+		Divider       = Color3.fromRGB(125, 145, 170),
+	},
+	["Spring"] = {
+		WindowBg      = Color3.fromRGB(12, 22, 10),
+		TitleBg       = Color3.fromRGB(16, 30, 13),
+		SectionBg     = Color3.fromRGB(20, 36, 16),
+		ElementBg     = Color3.fromRGB(24, 42, 19),
+		DropdownBg    = Color3.fromRGB(18, 32, 14),
+		PrimaryText   = Color3.fromRGB(220, 255, 215),
+		SecondaryText = Color3.fromRGB(140, 210, 130),
+		AccentColor   = Color3.fromRGB(60, 210, 80),
+		Divider       = Color3.fromRGB(35, 60, 28),
+	},
+	["Cloudy"] = {
+		WindowBg      = Color3.fromRGB(55, 62, 75),
+		TitleBg       = Color3.fromRGB(65, 73, 88),
+		SectionBg     = Color3.fromRGB(72, 80, 96),
+		ElementBg     = Color3.fromRGB(78, 88, 105),
+		DropdownBg    = Color3.fromRGB(68, 76, 92),
+		PrimaryText   = Color3.fromRGB(230, 235, 245),
+		SecondaryText = Color3.fromRGB(170, 178, 198),
+		AccentColor   = Color3.fromRGB(130, 170, 230),
+		Divider       = Color3.fromRGB(90, 100, 120),
+	},
+}
+
+function LuaLandMini:CreateWindow(Config)
+	local Title       = Config.Title    or "Lua Land Ui | Mini"
+	local Subtitle    = Config.Subtitle or ""
+	local ThemeName   = Config.Theme    or "Default"
+	local T           = ThemesDict[ThemeName] or ThemesDict["Default"]
+
+	local UI_WIDTH    = 320
+	local TITLE_H     = 44
+
+	local ScreenGui = Instance.new("ScreenGui")
+	ScreenGui.Name = "LuaLandMini"
+	ScreenGui.ResetOnSpawn = false
+	ScreenGui.Parent = RunService:IsStudio()
+		and game.Players.LocalPlayer:WaitForChild("PlayerGui") or CoreGui
+
+	local MainFrame = Instance.new("Frame")
+	MainFrame.Name = "MiniFrame"
+	MainFrame.Size = UDim2.new(0, UI_WIDTH, 0, TITLE_H)
+	MainFrame.Position = UDim2.new(0.5, -UI_WIDTH / 2, 0.5, -TITLE_H / 2)
+	MainFrame.BackgroundColor3 = T.WindowBg
+	MainFrame.BorderSizePixel = 0
+	MainFrame.ClipsDescendants = true
+	MainFrame.Parent = ScreenGui
+
+	local MFCorner = Instance.new("UICorner")
+	MFCorner.CornerRadius = UDim.new(0, 8)
+	MFCorner.Parent = MainFrame
+
+	local TitleBar = Instance.new("Frame")
+	TitleBar.Name = "TitleBar"
+	TitleBar.Size = UDim2.new(1, 0, 0, TITLE_H)
+	TitleBar.BackgroundColor3 = T.TitleBg
+	TitleBar.BorderSizePixel = 0
+	TitleBar.ZIndex = 5
+	TitleBar.Parent = MainFrame
+
+	local TBCorner = Instance.new("UICorner")
+	TBCorner.CornerRadius = UDim.new(0, 8)
+	TBCorner.Parent = TitleBar
+
+	local TBFillBottom = Instance.new("Frame")
+	TBFillBottom.Size = UDim2.new(1, 0, 0, 8)
+	TBFillBottom.Position = UDim2.new(0, 0, 1, -8)
+	TBFillBottom.BackgroundColor3 = T.TitleBg
+	TBFillBottom.BorderSizePixel = 0
+	TBFillBottom.ZIndex = 5
+	TBFillBottom.Parent = TitleBar
+
+	local TitlePad = Instance.new("UIPadding")
+	TitlePad.PaddingLeft  = UDim.new(0, 10)
+	TitlePad.PaddingRight = UDim.new(0, 60)
+	TitlePad.PaddingTop   = UDim.new(0, 4)
+	TitlePad.Parent = TitleBar
+
+	local TitleLabel = Instance.new("TextLabel")
+	TitleLabel.Size = UDim2.new(1, 0, 0, 0)
+	TitleLabel.AutomaticSize = Enum.AutomaticSize.Y
+	TitleLabel.BackgroundTransparency = 1
+	TitleLabel.Text = Title
+	TitleLabel.TextColor3 = T.PrimaryText
+	TitleLabel.TextSize = 14
+	TitleLabel.Font = Enum.Font.GothamBold
+	TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
+	TitleLabel.TextWrapped = true
+	TitleLabel.ZIndex = 6
+	TitleLabel.Parent = TitleBar
+
+	local SubtitleLabel
+	if Subtitle ~= "" then
+		SubtitleLabel = Instance.new("TextLabel")
+		SubtitleLabel.Size = UDim2.new(1, 0, 0, 0)
+		SubtitleLabel.AutomaticSize = Enum.AutomaticSize.Y
+		SubtitleLabel.BackgroundTransparency = 1
+		SubtitleLabel.Text = Subtitle
+		SubtitleLabel.TextColor3 = T.SecondaryText
+		SubtitleLabel.TextSize = 11
+		SubtitleLabel.Font = Enum.Font.Gotham
+		SubtitleLabel.TextXAlignment = Enum.TextXAlignment.Left
+		SubtitleLabel.TextWrapped = true
+		SubtitleLabel.ZIndex = 6
+		SubtitleLabel.Parent = TitleBar
+	end
+
+	local MinimizeBtn = Instance.new("TextButton")
+	MinimizeBtn.Size = UDim2.new(0, 22, 0, 22)
+	MinimizeBtn.Position = UDim2.new(1, -30, 0.5, -11)
+	MinimizeBtn.BackgroundTransparency = 1
+	MinimizeBtn.Text = ""
+	MinimizeBtn.ZIndex = 7
+	MinimizeBtn.Parent = TitleBar
+
+	local MinLine = Instance.new("Frame")
+	MinLine.Size = UDim2.new(1, 0, 0, 2)
+	MinLine.Position = UDim2.new(0, 0, 0.65, 0)
+	MinLine.BackgroundColor3 = T.PrimaryText
+	MinLine.BorderSizePixel = 0
+	MinLine.ZIndex = 7
+	MinLine.Parent = MinimizeBtn
+
+	local MinLineCor = Instance.new("UICorner")
+	MinLineCor.CornerRadius = UDim.new(1, 0)
+	MinLineCor.Parent = MinLine
+
+	MinimizeBtn.MouseEnter:Connect(function()
+		TweenService:Create(MinLine, TweenInfo.new(0.15), {BackgroundColor3 = T.AccentColor}):Play()
+	end)
+	MinimizeBtn.MouseLeave:Connect(function()
+		TweenService:Create(MinLine, TweenInfo.new(0.15), {BackgroundColor3 = T.PrimaryText}):Play()
+	end)
+
+	local ContentHolder = Instance.new("Frame")
+	ContentHolder.Name = "ContentHolder"
+	ContentHolder.Size = UDim2.new(1, 0, 1, -TITLE_H)
+	ContentHolder.Position = UDim2.new(0, 0, 0, TITLE_H)
+	ContentHolder.BackgroundTransparency = 1
+	ContentHolder.ClipsDescendants = true
+	ContentHolder.Parent = MainFrame
+
+	local ContentScroll = Instance.new("ScrollingFrame")
+	ContentScroll.Name = "ContentScroll"
+	ContentScroll.Size = UDim2.new(1, 0, 1, 0)
+	ContentScroll.BackgroundTransparency = 1
+	ContentScroll.BorderSizePixel = 0
+	ContentScroll.ScrollBarThickness = 2
+	ContentScroll.CanvasSize = UDim2.new(0, 0, 0, 0)
+	ContentScroll.AutomaticCanvasSize = Enum.AutomaticSize.Y
+	ContentScroll.Parent = ContentHolder
+
+	local ContentLayout = Instance.new("UIListLayout")
+	ContentLayout.SortOrder = Enum.SortOrder.LayoutOrder
+	ContentLayout.Padding = UDim.new(0, 0)
+	ContentLayout.Parent = ContentScroll
+
+	local IsMinimized = false
+	local FullHeight = TITLE_H
+	local Animating = false
+
+	local function RecalcHeight()
+		local contentH = ContentLayout.AbsoluteContentSize.Y
+		FullHeight = TITLE_H + contentH
+		if not IsMinimized then
+			MainFrame.Size = UDim2.new(0, UI_WIDTH, 0, FullHeight)
+		end
+	end
+
+	ContentLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+		RecalcHeight()
+	end)
+
+	MinimizeBtn.MouseButton1Click:Connect(function()
+		if Animating then return end
+		Animating = true
+		IsMinimized = not IsMinimized
+		if IsMinimized then
+			ContentHolder.Visible = false
+			TweenService:Create(MainFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {
+				Size = UDim2.new(0, UI_WIDTH, 0, TITLE_H)
+			}):Play()
+		else
+			TweenService:Create(MainFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {
+				Size = UDim2.new(0, UI_WIDTH, 0, FullHeight)
+			}):Play()
+			task.delay(0.05, function() ContentHolder.Visible = true end)
+		end
+		task.delay(0.27, function() Animating = false end)
+	end)
+
+	local Dragging, DragInput, DragStart, StartPos = false, nil, nil, nil
+	TitleBar.InputBegan:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseButton1
+			or input.UserInputType == Enum.UserInputType.Touch then
+			Dragging = true
+			DragStart = input.Position
+			StartPos = MainFrame.Position
+			input.Changed:Connect(function()
+				if input.UserInputState == Enum.UserInputState.End then Dragging = false end
+			end)
+		end
+	end)
+	TitleBar.InputChanged:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseMovement
+			or input.UserInputType == Enum.UserInputType.Touch then
+			DragInput = input
+		end
+	end)
+	UserInputService.InputChanged:Connect(function(input)
+		if input == DragInput and Dragging then
+			local d = input.Position - DragStart
+			MainFrame.Position = UDim2.new(
+				StartPos.X.Scale, StartPos.X.Offset + d.X,
+				StartPos.Y.Scale, StartPos.Y.Offset + d.Y)
+		end
+	end)
+
+	local WindowHandling = {}
+
+	function WindowHandling:SetTitle(NewTitle)
+		TitleLabel.Text = NewTitle
+	end
+
+	function WindowHandling:SetSubtitle(NewSub)
+		if SubtitleLabel then SubtitleLabel.Text = NewSub end
+	end
+
+	function WindowHandling:SetTheme(NewThemeName)
+		local NT = ThemesDict[NewThemeName] or ThemesDict["Default"]
+		T = NT
+		MainFrame.BackgroundColor3 = NT.WindowBg
+		TitleBar.BackgroundColor3 = NT.TitleBg
+		TBFillBottom.BackgroundColor3 = NT.TitleBg
+		TitleLabel.TextColor3 = NT.PrimaryText
+		if SubtitleLabel then SubtitleLabel.TextColor3 = NT.SecondaryText end
+		MinLine.BackgroundColor3 = NT.PrimaryText
+	end
+
+	function WindowHandling:CreateSection(SectionText)
+		local SectionWrapper = Instance.new("Frame")
+		SectionWrapper.Name = "Section_" .. SectionText
+		SectionWrapper.Size = UDim2.new(1, 0, 0, 36)
+		SectionWrapper.BackgroundColor3 = T.SectionBg
+		SectionWrapper.BorderSizePixel = 0
+		SectionWrapper.ClipsDescendants = false
+		SectionWrapper.Parent = ContentScroll
+
+		local SWTopFill = Instance.new("Frame")
+		SWTopFill.Size = UDim2.new(1, 0, 0, 4)
+		SWTopFill.BackgroundColor3 = T.SectionBg
+		SWTopFill.BorderSizePixel = 0
+		SWTopFill.Parent = SectionWrapper
+
+		local SText = Instance.new("TextLabel")
+		SText.Size = UDim2.new(1, -44, 1, 0)
+		SText.Position = UDim2.new(0, 10, 0, 0)
+		SText.BackgroundTransparency = 1
+		SText.Text = SectionText
+		SText.TextColor3 = T.PrimaryText
+		SText.TextSize = 13
+		SText.Font = Enum.Font.GothamBold
+		SText.TextXAlignment = Enum.TextXAlignment.Left
+		SText.TextWrapped = true
+		SText.Parent = SectionWrapper
+
+		local ArrowBtn = Instance.new("TextButton")
+		ArrowBtn.Size = UDim2.new(0, 32, 0, 32)
+		ArrowBtn.Position = UDim2.new(1, -36, 0.5, -16)
+		ArrowBtn.BackgroundTransparency = 1
+		ArrowBtn.Text = ""
+		ArrowBtn.ZIndex = 3
+		ArrowBtn.Parent = SectionWrapper
+
+		local Arrow = Instance.new("TextLabel")
+		Arrow.Size = UDim2.new(1, 0, 1, 0)
+		Arrow.BackgroundTransparency = 1
+		Arrow.Text = "â–¾"
+		Arrow.TextColor3 = T.SecondaryText
+		Arrow.TextSize = 14
+		Arrow.Font = Enum.Font.GothamBold
+		Arrow.ZIndex = 3
+		Arrow.Parent = ArrowBtn
+
+		local ContentFrame = Instance.new("Frame")
+		ContentFrame.Name = "SectionContent"
+		ContentFrame.Size = UDim2.new(1, 0, 0, 0)
+		ContentFrame.BackgroundColor3 = T.DropdownBg
+		ContentFrame.BorderSizePixel = 0
+		ContentFrame.ClipsDescendants = true
+		ContentFrame.Parent = ContentScroll
+
+		local CFLayout = Instance.new("UIListLayout")
+		CFLayout.SortOrder = Enum.SortOrder.LayoutOrder
+		CFLayout.Padding = UDim.new(0, 0)
+		CFLayout.Parent = ContentFrame
+
+		local Divider = Instance.new("Frame")
+		Divider.Size = UDim2.new(1, 0, 0, 1)
+		Divider.BackgroundColor3 = T.Divider
+		Divider.BorderSizePixel = 0
+		Divider.Parent = ContentScroll
+
+		local IsOpen = false
+		local SectionAnimating = false
+		local FullSectionH = 0
+
+		CFLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+			FullSectionH = CFLayout.AbsoluteContentSize.Y
+			if IsOpen then
+				ContentFrame.Size = UDim2.new(1, 0, 0, FullSectionH)
+			end
+		end)
+
+		local function ToggleSection()
+			if SectionAnimating then return end
+			SectionAnimating = true
+			IsOpen = not IsOpen
+			if IsOpen then
+				TweenService:Create(Arrow, TweenInfo.new(0.2), {Rotation = 180}):Play()
+				ContentFrame.Size = UDim2.new(1, 0, 0, 0)
+				TweenService:Create(ContentFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {
+					Size = UDim2.new(1, 0, 0, FullSectionH)
+				}):Play()
+			else
+				TweenService:Create(Arrow, TweenInfo.new(0.2), {Rotation = 0}):Play()
+				TweenService:Create(ContentFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quart, Enum.EasingDirection.In), {
+					Size = UDim2.new(1, 0, 0, 0)
+				}):Play()
+			end
+			task.delay(0.27, function() SectionAnimating = false end)
+		end
+
+		ArrowBtn.MouseButton1Click:Connect(ToggleSection)
+		SectionWrapper.InputBegan:Connect(function(input)
+			if input.UserInputType == Enum.UserInputType.MouseButton1
+				or input.UserInputType == Enum.UserInputType.Touch then
+				ToggleSection()
+			end
+		end)
+
+		local SectionHandling = {}
+
+		function SectionHandling:CreateButton(ButtonText, Callback)
+			local Btn = Instance.new("TextButton")
+			Btn.Size = UDim2.new(1, 0, 0, 0)
+			Btn.AutomaticSize = Enum.AutomaticSize.Y
+			Btn.BackgroundColor3 = T.ElementBg
+			Btn.BorderSizePixel = 0
+			Btn.AutoButtonColor = false
+			Btn.Text = ""
+			Btn.Parent = ContentFrame
+
+			local BtnPad = Instance.new("UIPadding")
+			BtnPad.PaddingTop    = UDim.new(0, 9)
+			BtnPad.PaddingBottom = UDim.new(0, 9)
+			BtnPad.PaddingLeft   = UDim.new(0, 10)
+			BtnPad.PaddingRight  = UDim.new(0, 36)
+			BtnPad.Parent = Btn
+
+			local BLabel = Instance.new("TextLabel")
+			BLabel.Size = UDim2.new(1, 0, 0, 0)
+			BLabel.AutomaticSize = Enum.AutomaticSize.Y
+			BLabel.BackgroundTransparency = 1
+			BLabel.Text = ButtonText
+			BLabel.TextColor3 = T.PrimaryText
+			BLabel.TextSize = 13
+			BLabel.Font = Enum.Font.GothamMedium
+			BLabel.TextXAlignment = Enum.TextXAlignment.Left
+			BLabel.TextWrapped = true
+			BLabel.Parent = Btn
+
+			local BIcon = Instance.new("ImageLabel")
+			BIcon.Size = UDim2.new(0, 16, 0, 16)
+			BIcon.Position = UDim2.new(1, -26, 0.5, -8)
+			BIcon.BackgroundTransparency = 1
+			BIcon.Image = "rbxassetid://9728118892"
+			BIcon.ImageColor3 = T.SecondaryText
+			BIcon.Parent = Btn
+
+			local BDivider = Instance.new("Frame")
+			BDivider.Size = UDim2.new(1, 0, 0, 1)
+			BDivider.Position = UDim2.new(0, 0, 1, -1)
+			BDivider.BackgroundColor3 = T.Divider
+			BDivider.BorderSizePixel = 0
+			BDivider.Parent = Btn
+
+			Btn.MouseEnter:Connect(function()
+				TweenService:Create(Btn, TweenInfo.new(0.12), {BackgroundColor3 = T.SectionBg}):Play()
+				TweenService:Create(BIcon, TweenInfo.new(0.12), {ImageColor3 = T.PrimaryText}):Play()
+			end)
+			Btn.MouseLeave:Connect(function()
+				TweenService:Create(Btn, TweenInfo.new(0.12), {BackgroundColor3 = T.ElementBg}):Play()
+				TweenService:Create(BIcon, TweenInfo.new(0.12), {ImageColor3 = T.SecondaryText}):Play()
+			end)
+			Btn.MouseButton1Down:Connect(function()
+				TweenService:Create(Btn, TweenInfo.new(0.08), {BackgroundColor3 = T.WindowBg}):Play()
+			end)
+			Btn.MouseButton1Up:Connect(function()
+				TweenService:Create(Btn, TweenInfo.new(0.08), {BackgroundColor3 = T.SectionBg}):Play()
+			end)
+			Btn.MouseButton1Click:Connect(function() Callback() end)
+		end
+
+		function SectionHandling:CreateLabel(LabelText)
+			local LabelFrame = Instance.new("Frame")
+			LabelFrame.Size = UDim2.new(1, 0, 0, 0)
+			LabelFrame.AutomaticSize = Enum.AutomaticSize.Y
+			LabelFrame.BackgroundColor3 = T.ElementBg
+			LabelFrame.BorderSizePixel = 0
+			LabelFrame.Parent = ContentFrame
+
+			local LPad = Instance.new("UIPadding")
+			LPad.PaddingTop    = UDim.new(0, 7)
+			LPad.PaddingBottom = UDim.new(0, 7)
+			LPad.PaddingLeft   = UDim.new(0, 10)
+			LPad.PaddingRight  = UDim.new(0, 10)
+			LPad.Parent = LabelFrame
+
+			local LText = Instance.new("TextLabel")
+			LText.Size = UDim2.new(1, 0, 0, 0)
+			LText.AutomaticSize = Enum.AutomaticSize.Y
+			LText.BackgroundTransparency = 1
+			LText.Text = LabelText
+			LText.TextColor3 = T.SecondaryText
+			LText.TextSize = 12
+			LText.Font = Enum.Font.Gotham
+			LText.TextXAlignment = Enum.TextXAlignment.Left
+			LText.TextWrapped = true
+			LText.Parent = LabelFrame
+
+			local LDivider = Instance.new("Frame")
+			LDivider.Size = UDim2.new(1, 0, 0, 1)
+			LDivider.Position = UDim2.new(0, 0, 1, -1)
+			LDivider.BackgroundColor3 = T.Divider
+			LDivider.BorderSizePixel = 0
+			LDivider.Parent = LabelFrame
+
+			return LText
+		end
+
+		function SectionHandling:CreateTextbox(Placeholder, Callback)
+			local TBOuter = Instance.new("Frame")
+			TBOuter.Size = UDim2.new(1, 0, 0, 40)
+			TBOuter.BackgroundColor3 = T.ElementBg
+			TBOuter.BorderSizePixel = 0
+			TBOuter.Parent = ContentFrame
+
+			local TBPad = Instance.new("UIPadding")
+			TBPad.PaddingLeft   = UDim.new(0, 10)
+			TBPad.PaddingRight  = UDim.new(0, 10)
+			TBPad.PaddingTop    = UDim.new(0, 6)
+			TBPad.PaddingBottom = UDim.new(0, 6)
+			TBPad.Parent = TBOuter
+
+			local TBox = Instance.new("TextBox")
+			TBox.Size = UDim2.new(1, 0, 1, 0)
+			TBox.BackgroundColor3 = T.SectionBg
+			TBox.PlaceholderText = Placeholder or "Type here..."
+			TBox.Text = ""
+			TBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+			TBox.PlaceholderColor3 = T.SecondaryText
+			TBox.TextSize = 12
+			TBox.Font = Enum.Font.Gotham
+			TBox.TextXAlignment = Enum.TextXAlignment.Left
+			TBox.ClearTextOnFocus = false
+			TBox.Parent = TBOuter
+
+			local TBCorner = Instance.new("UICorner")
+			TBCorner.CornerRadius = UDim.new(0, 5)
+			TBCorner.Parent = TBox
+
+			local TBInPad = Instance.new("UIPadding")
+			TBInPad.PaddingLeft = UDim.new(0, 8)
+			TBInPad.Parent = TBox
+
+			local TBDivider = Instance.new("Frame")
+			TBDivider.Size = UDim2.new(1, 0, 0, 1)
+			TBDivider.Position = UDim2.new(0, 0, 1, -1)
+			TBDivider.BackgroundColor3 = T.Divider
+			TBDivider.BorderSizePixel = 0
+			TBDivider.Parent = TBOuter
+
+			if Callback then
+				TBox.FocusLost:Connect(function()
+					Callback(TBox.Text)
+				end)
+			end
+
+			return TBox
+		end
+
+		return SectionHandling
+	end
+
+	return WindowHandling
+end
+
+return LuaLandMini
