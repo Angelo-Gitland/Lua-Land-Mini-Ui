@@ -19,10 +19,37 @@ local ThemesDict = {
 	}
 }
 
+local IconsDict = {
+	["house"] = "rbxassetid://98755624629571",
+	["home"] = "rbxassetid://98755624629571",
+	["code-xml"] = "rbxassetid://130150477351734",
+	["key-round"] = "rbxassetid://83619031955390",
+	["key"] = "rbxassetid://96510194465420",
+	["star"] = "rbxassetid://136141469398409",
+	["zap"] = "rbxassetid://130551565616516",
+	["rocket"] = "rbxassetid://87412317685854",
+	["settings"] = "rbxassetid://80758916183665",
+	["shield-check"] = "rbxassetid://87354736164608",
+	["sparkles"] = "rbxassetid://138635884129147",
+	["crown"] = "rbxassetid://127843403295538",
+	["gamepad"] = "rbxassetid://121607283959010",
+	["sword"] = "rbxassetid://124448418211665",
+	["flame"] = "rbxassetid://98218034436456",
+	["user-round"] = "rbxassetid://136485052187963",
+	["globe"] = "rbxassetid://114238209622913",
+	["book-open-text"]= "rbxassetid://100629528672195",
+}
+
 function LuaLandMini:CreateWindow(Config)
 	local Title       = Config.Title    or "Lua Land | Mini"
 	local ThemeName   = Config.Theme    or "Default"
 	local T           = ThemesDict[ThemeName] or ThemesDict["Default"]
+	
+	local IntroConfig = Config.Intro
+	local ShowIntro   = IntroConfig ~= nil
+	local IntroTitle  = ShowIntro and (IntroConfig.Title or "Lua Land Ui | Mini") or ""
+	local IntroSubtitle = ShowIntro and (IntroConfig.Subtitle or "Developed By LLH Lua Land") or ""
+	local IntroIconKey = ShowIntro and (IntroConfig.Icon or "house") or "house"
 
 	local UI_WIDTH    = 240
 	local TITLE_H     = 32
@@ -39,6 +66,7 @@ function LuaLandMini:CreateWindow(Config)
 	MainFrame.BackgroundColor3 = T.WindowBg
 	MainFrame.BorderSizePixel = 0
 	MainFrame.ClipsDescendants = true
+	MainFrame.Visible = false
 	MainFrame.Parent = ScreenGui
 
 	local MFCorner = Instance.new("UICorner")
@@ -146,6 +174,121 @@ function LuaLandMini:CreateWindow(Config)
 			MainFrame.Position = UDim2.new(StartPos.X.Scale, StartPos.X.Offset + d.X, StartPos.Y.Scale, StartPos.Y.Offset + d.Y)
 		end
 	end)
+
+	local function ShowMainWindow()
+		MainFrame.Visible = true
+		MainFrame.BackgroundTransparency = 1
+		MainFrame.Position = UDim2.new(0.5, -UI_WIDTH/2, 0.52, -TITLE_H/2)
+		TweenService:Create(MainFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {
+			BackgroundTransparency = 0,
+			Position = UDim2.new(0.5, -UI_WIDTH/2, 0.5, -TITLE_H/2),
+		}):Play()
+	end
+
+	if ShowIntro then
+		local IntroGui = Instance.new("ScreenGui")
+		IntroGui.Name = "LuaLandMiniIntro"
+		IntroGui.ResetOnSpawn = false
+		IntroGui.Parent = RunService:IsStudio() and game.Players.LocalPlayer:WaitForChild("PlayerGui") or CoreGui
+
+		local IntroFrame = Instance.new("Frame")
+		IntroFrame.Size = UDim2.new(0, 260, 0, 110)
+		IntroFrame.Position = UDim2.new(0.5, -130, 0.5, -55)
+		IntroFrame.BackgroundColor3 = T.TitleBg
+		IntroFrame.BackgroundTransparency = 1
+		IntroFrame.BorderSizePixel = 0
+		IntroFrame.Parent = IntroGui
+
+		local IFCorner = Instance.new("UICorner")
+		IFCorner.CornerRadius = UDim.new(0, 10)
+		IFCorner.Parent = IntroFrame
+
+		local IIcon = Instance.new("ImageLabel")
+		IIcon.Size = UDim2.new(0, 38, 0, 38)
+		IIcon.AnchorPoint = Vector2.new(0.5, 0)
+		IIcon.Position = UDim2.new(0.5, 0, 0, 14)
+		IIcon.BackgroundTransparency = 1
+		IIcon.Image = IconsDict[IntroIconKey] or IconsDict["house"]
+		IIcon.ImageColor3 = T.AccentColor
+		IIcon.ImageTransparency = 1
+		IIcon.Parent = IntroFrame
+
+		local ITitleLbl = Instance.new("TextLabel")
+		ITitleLbl.Size = UDim2.new(1, -20, 0, 0)
+		ITitleLbl.AutomaticSize = Enum.AutomaticSize.Y
+		ITitleLbl.Position = UDim2.new(0, 10, 0, 58)
+		ITitleLbl.BackgroundTransparency = 1
+		ITitleLbl.Text = IntroTitle
+		ITitleLbl.TextColor3 = T.PrimaryText
+		ITitleLbl.TextTransparency = 1
+		ITitleLbl.TextSize = 15
+		ITitleLbl.Font = Enum.Font.GothamBold
+		ITitleLbl.TextXAlignment = Enum.TextXAlignment.Center
+		ITitleLbl.TextWrapped = true
+		ITitleLbl.Parent = IntroFrame
+
+		local ISubLbl = Instance.new("TextLabel")
+		ISubLbl.Size = UDim2.new(1, -20, 0, 0)
+		ISubLbl.AutomaticSize = Enum.AutomaticSize.Y
+		ISubLbl.Position = UDim2.new(0, 10, 0, 80)
+		ISubLbl.BackgroundTransparency = 1
+		ISubLbl.Text = IntroSubtitle
+		ISubLbl.TextColor3 = T.SecondaryText
+		ISubLbl.TextTransparency = 1
+		ISubLbl.TextSize = 11
+		ISubLbl.Font = Enum.Font.Gotham
+		ISubLbl.TextXAlignment = Enum.TextXAlignment.Center
+		ISubLbl.TextWrapped = true
+		ISubLbl.Parent = IntroFrame
+
+		local ILine = Instance.new("Frame")
+		ILine.Size = UDim2.new(0, 0, 0, 2)
+		ILine.AnchorPoint = Vector2.new(0.5, 0)
+		ILine.Position = UDim2.new(0.5, 0, 1, -8)
+		ILine.BackgroundColor3 = T.AccentColor
+		ILine.BorderSizePixel = 0
+		ILine.Parent = IntroFrame
+
+		local ILineCor = Instance.new("UICorner")
+		ILineCor.CornerRadius = UDim.new(1, 0)
+		ILineCor.Parent = ILine
+
+		local fast = TweenInfo.new(0.35, Enum.EasingStyle.Quart, Enum.EasingDirection.Out)
+		local med = TweenInfo.new(0.45, Enum.EasingStyle.Quart, Enum.EasingDirection.Out)
+		local slow = TweenInfo.new(0.7, Enum.EasingStyle.Quart, Enum.EasingDirection.Out)
+		local exit = TweenInfo.new(0.35, Enum.EasingStyle.Quart, Enum.EasingDirection.In)
+
+		local function tw(obj, info, props) TweenService:Create(obj, info, props):Play() end
+
+		task.spawn(function()
+			task.wait(0.05)
+			tw(IntroFrame, fast, {BackgroundTransparency = 0})
+			tw(IIcon, fast, {ImageTransparency = 0})
+			task.wait(0.3)
+			tw(ITitleLbl, med, {TextTransparency = 0})
+			task.wait(0.22)
+			tw(ISubLbl, med, {TextTransparency = 0})
+			task.wait(0.18)
+			tw(ILine, slow, {Size = UDim2.new(0.65, 0, 0, 2)})
+			task.wait(1.1)
+			tw(ILine, exit, {Size = UDim2.new(0, 0, 0, 2)})
+			tw(ISubLbl, exit, {TextTransparency = 1})
+			task.wait(0.12)
+			tw(ITitleLbl, exit, {TextTransparency = 1})
+			task.wait(0.1)
+			tw(IIcon, exit, {ImageTransparency = 1})
+			task.wait(0.12)
+			tw(IntroFrame, exit, {
+				BackgroundTransparency = 1,
+				Position = UDim2.new(0.5, -130, 0.46, -55),
+			})
+			task.wait(0.38)
+			IntroGui:Destroy()
+			ShowMainWindow()
+		end)
+	else
+		ShowMainWindow()
+	end
 
 	local WindowHandling = {}
 
@@ -274,6 +417,36 @@ function LuaLandMini:CreateWindow(Config)
 			end)
 		end
 
+		function SectionHandling:CreateLabel(LabelText)
+			local LRow = Instance.new("Frame")
+			LRow.Size = UDim2.new(1, 0, 0, 0)
+			LRow.AutomaticSize = Enum.AutomaticSize.Y
+			LRow.BackgroundColor3 = T.ElementBg
+			LRow.BorderSizePixel = 0
+			LRow.Parent = Container
+
+			local LPad = Instance.new("UIPadding")
+			LPad.PaddingLeft = UDim.new(0, 12)
+			LPad.PaddingRight = UDim.new(0, 10)
+			LPad.PaddingTop = UDim.new(0, 6)
+			LPad.PaddingBottom = UDim.new(0, 6)
+			LPad.Parent = LRow
+
+			local LText = Instance.new("TextLabel")
+			LText.Size = UDim2.new(1, 0, 0, 0)
+			LText.AutomaticSize = Enum.AutomaticSize.Y
+			LText.BackgroundTransparency = 1
+			LText.Text = LabelText
+			LText.TextColor3 = T.SecondaryText
+			LText.TextSize = 11
+			LText.Font = Enum.Font.Gotham
+			LText.TextXAlignment = Enum.TextXAlignment.Left
+			LText.TextWrapped = true
+			LText.Parent = LRow
+			
+			return LText
+		end
+
 		function SectionHandling:CreateTextbox(Placeholder, Callback)
 			local BoxFrame = Instance.new("Frame")
 			BoxFrame.Size = UDim2.new(1, 0, 0, 42)
@@ -292,12 +465,12 @@ function LuaLandMini:CreateWindow(Config)
 			Box.TextSize = 10
 			Box.Parent = BoxFrame
 
-			local UICorner = Instance.new("UICorner")
-			UICorner.CornerRadius = UDim.new(0, 4)
-			UICorner.Parent = Box
+			local BoxCorner2 = Instance.new("UICorner")
+			BoxCorner2.CornerRadius = UDim.new(0, 4)
+			BoxCorner2.Parent = Box
 
 			Box.FocusLost:Connect(function(enter)
-				if enter then Callback(Box.Text) end
+				if enter and Callback then Callback(Box.Text) end
 			end)
 		end
 
