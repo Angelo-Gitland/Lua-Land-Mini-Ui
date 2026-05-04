@@ -19,27 +19,6 @@ local ThemesDict = {
 	}
 }
 
-local IconsDict = {
-	["house"] = "rbxassetid://98755624629571",
-	["home"] = "rbxassetid://98755624629571",
-	["code-xml"] = "rbxassetid://130150477351734",
-	["key-round"] = "rbxassetid://83619031955390",
-	["key"] = "rbxassetid://96510194465420",
-	["star"] = "rbxassetid://136141469398409",
-	["zap"] = "rbxassetid://130551565616516",
-	["rocket"] = "rbxassetid://87412317685854",
-	["settings"] = "rbxassetid://80758916183665",
-	["shield-check"] = "rbxassetid://87354736164608",
-	["sparkles"] = "rbxassetid://138635884129147",
-	["crown"] = "rbxassetid://127843403295538",
-	["gamepad"] = "rbxassetid://121607283959010",
-	["sword"] = "rbxassetid://124448418211665",
-	["flame"] = "rbxassetid://98218034436456",
-	["user-round"] = "rbxassetid://136485052187963",
-	["globe"] = "rbxassetid://114238209622913",
-	["book-open-text"]= "rbxassetid://100629528672195",
-}
-
 function LuaLandMini:CreateWindow(Config)
 	local Title       = Config.Title    or "Lua Land | Mini"
 	local ThemeName   = Config.Theme    or "Default"
@@ -49,7 +28,6 @@ function LuaLandMini:CreateWindow(Config)
 	local ShowIntro   = IntroConfig ~= nil
 	local IntroTitle  = ShowIntro and (IntroConfig.Title or "Lua Land Ui | Mini") or ""
 	local IntroSubtitle = ShowIntro and (IntroConfig.Subtitle or "Developed By LLH Lua Land") or ""
-	local IntroIconKey = ShowIntro and (IntroConfig.Icon or "house") or "house"
 
 	local UI_WIDTH    = 240
 	local TITLE_H     = 32
@@ -97,16 +75,6 @@ function LuaLandMini:CreateWindow(Config)
 	TitleLabel.ZIndex = 11
 	TitleLabel.Parent = TitleBar
 
-	local CloseBtn = Instance.new("ImageButton")
-	CloseBtn.Name = "CloseBtn"
-	CloseBtn.Size = UDim2.new(0, 14, 0, 14)
-	CloseBtn.Position = UDim2.new(1, -24, 0.5, -7)
-	CloseBtn.BackgroundTransparency = 1
-	CloseBtn.Image = "rbxassetid://130629964514885"
-	CloseBtn.ImageColor3 = T.PrimaryText
-	CloseBtn.ZIndex = 12
-	CloseBtn.Parent = TitleBar
-
 	local MinimizeBtn = Instance.new("TextButton")
 	MinimizeBtn.Name = "MinimizeBtn"
 	MinimizeBtn.Size = UDim2.new(0, 14, 0, 14)
@@ -119,14 +87,24 @@ function LuaLandMini:CreateWindow(Config)
 	MinimizeBtn.ZIndex = 12
 	MinimizeBtn.Parent = TitleBar
 
+	local CloseBtn = Instance.new("ImageButton")
+	CloseBtn.Name = "CloseBtn"
+	CloseBtn.Size = UDim2.new(0, 14, 0, 14)
+	CloseBtn.Position = UDim2.new(1, -24, 0.5, -7)
+	CloseBtn.BackgroundTransparency = 1
+	CloseBtn.Image = "rbxassetid://130629964514885"
+	CloseBtn.ImageColor3 = T.PrimaryText
+	CloseBtn.ZIndex = 12
+	CloseBtn.Parent = TitleBar
+
 	local ContentScroll = Instance.new("ScrollingFrame")
 	ContentScroll.Size = UDim2.new(1, 0, 1, -TITLE_H)
 	ContentScroll.Position = UDim2.new(0, 0, 0, TITLE_H)
 	ContentScroll.BackgroundTransparency = 1
 	ContentScroll.BorderSizePixel = 0
 	ContentScroll.ScrollBarThickness = 0
-	ContentScroll.AutomaticCanvasSize = Enum.AutomaticSize.Y
 	ContentScroll.CanvasSize = UDim2.new(0, 0, 0, 0)
+	ContentScroll.AutomaticCanvasSize = Enum.AutomaticSize.Y
 	ContentScroll.Parent = MainFrame
 
 	local ContentLayout = Instance.new("UIListLayout")
@@ -178,10 +156,10 @@ function LuaLandMini:CreateWindow(Config)
 	local function ShowMainWindow()
 		MainFrame.Visible = true
 		MainFrame.BackgroundTransparency = 1
-		MainFrame.Position = UDim2.new(0.5, -UI_WIDTH/2, 0.52, -TITLE_H/2)
+		MainFrame.Position = UDim2.new(0.5, -UI_WIDTH / 2, 0.52, -TITLE_H / 2)
 		TweenService:Create(MainFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {
 			BackgroundTransparency = 0,
-			Position = UDim2.new(0.5, -UI_WIDTH/2, 0.5, -TITLE_H/2),
+			Position = UDim2.new(0.5, -UI_WIDTH / 2, 0.5, -TITLE_H / 2),
 		}):Play()
 	end
 
@@ -203,20 +181,10 @@ function LuaLandMini:CreateWindow(Config)
 		IFCorner.CornerRadius = UDim.new(0, 10)
 		IFCorner.Parent = IntroFrame
 
-		local IIcon = Instance.new("ImageLabel")
-		IIcon.Size = UDim2.new(0, 38, 0, 38)
-		IIcon.AnchorPoint = Vector2.new(0.5, 0)
-		IIcon.Position = UDim2.new(0.5, 0, 0, 14)
-		IIcon.BackgroundTransparency = 1
-		IIcon.Image = IconsDict[IntroIconKey] or IconsDict["house"]
-		IIcon.ImageColor3 = T.AccentColor
-		IIcon.ImageTransparency = 1
-		IIcon.Parent = IntroFrame
-
 		local ITitleLbl = Instance.new("TextLabel")
 		ITitleLbl.Size = UDim2.new(1, -20, 0, 0)
 		ITitleLbl.AutomaticSize = Enum.AutomaticSize.Y
-		ITitleLbl.Position = UDim2.new(0, 10, 0, 58)
+		ITitleLbl.Position = UDim2.new(0, 10, 0, 30)
 		ITitleLbl.BackgroundTransparency = 1
 		ITitleLbl.Text = IntroTitle
 		ITitleLbl.TextColor3 = T.PrimaryText
@@ -230,7 +198,7 @@ function LuaLandMini:CreateWindow(Config)
 		local ISubLbl = Instance.new("TextLabel")
 		ISubLbl.Size = UDim2.new(1, -20, 0, 0)
 		ISubLbl.AutomaticSize = Enum.AutomaticSize.Y
-		ISubLbl.Position = UDim2.new(0, 10, 0, 80)
+		ISubLbl.Position = UDim2.new(0, 10, 0, 52)
 		ISubLbl.BackgroundTransparency = 1
 		ISubLbl.Text = IntroSubtitle
 		ISubLbl.TextColor3 = T.SecondaryText
@@ -263,7 +231,6 @@ function LuaLandMini:CreateWindow(Config)
 		task.spawn(function()
 			task.wait(0.05)
 			tw(IntroFrame, fast, {BackgroundTransparency = 0})
-			tw(IIcon, fast, {ImageTransparency = 0})
 			task.wait(0.3)
 			tw(ITitleLbl, med, {TextTransparency = 0})
 			task.wait(0.22)
@@ -275,8 +242,6 @@ function LuaLandMini:CreateWindow(Config)
 			tw(ISubLbl, exit, {TextTransparency = 1})
 			task.wait(0.12)
 			tw(ITitleLbl, exit, {TextTransparency = 1})
-			task.wait(0.1)
-			tw(IIcon, exit, {ImageTransparency = 1})
 			task.wait(0.12)
 			tw(IntroFrame, exit, {
 				BackgroundTransparency = 1,
@@ -310,13 +275,13 @@ function LuaLandMini:CreateWindow(Config)
 		SText.TextXAlignment = Enum.TextXAlignment.Left
 		SText.Parent = SectionFrame
 
-		local ArrowIcon = Instance.new("ImageLabel")
-		ArrowIcon.Size = UDim2.new(0, 14, 0, 14)
-		ArrowIcon.Position = UDim2.new(1, -24, 0.5, -7)
-		ArrowIcon.BackgroundTransparency = 1
-		ArrowIcon.Image = "rbxassetid://11552476728"
-		ArrowIcon.ImageColor3 = T.SecondaryText
-		ArrowIcon.Parent = SectionFrame
+		local ArrowBtn = Instance.new("ImageButton")
+		ArrowBtn.Size = UDim2.new(0, 14, 0, 14)
+		ArrowBtn.Position = UDim2.new(1, -24, 0.5, -7)
+		ArrowBtn.BackgroundTransparency = 1
+		ArrowBtn.Image = "rbxassetid://11552476728"
+		ArrowBtn.ImageColor3 = T.SecondaryText
+		ArrowBtn.Parent = SectionFrame
 
 		local Container = Instance.new("Frame")
 		Container.Size = UDim2.new(1, 0, 0, 0)
@@ -330,15 +295,13 @@ function LuaLandMini:CreateWindow(Config)
 		CLayout.Parent = Container
 
 		local IsOpen = false
-		SectionFrame.InputBegan:Connect(function(input)
-			if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-				IsOpen = not IsOpen
-				local targetHeight = IsOpen and CLayout.AbsoluteContentSize.Y or 0
-				TweenService:Create(Container, TweenInfo.new(0.25, Enum.EasingStyle.Quart), {Size = UDim2.new(1, 0, 0, targetHeight)}):Play()
-				TweenService:Create(ArrowIcon, TweenInfo.new(0.25), {Rotation = IsOpen and 180 or 0}):Play()
-				task.wait(0.26)
-				UpdateMainHeight()
-			end
+		ArrowBtn.MouseButton1Click:Connect(function()
+			IsOpen = not IsOpen
+			local targetHeight = IsOpen and CLayout.AbsoluteContentSize.Y or 0
+			TweenService:Create(Container, TweenInfo.new(0.25, Enum.EasingStyle.Quart), {Size = UDim2.new(1, 0, 0, targetHeight)}):Play()
+			TweenService:Create(ArrowBtn, TweenInfo.new(0.25), {Rotation = IsOpen and 180 or 0}):Play()
+			task.wait(0.26)
+			UpdateMainHeight()
 		end)
 
 		local SectionHandling = {}
@@ -358,15 +321,6 @@ function LuaLandMini:CreateWindow(Config)
 			local BtnPad = Instance.new("UIPadding")
 			BtnPad.PaddingLeft = UDim.new(0, 12)
 			BtnPad.Parent = Btn
-
-			local BIcon = Instance.new("ImageLabel")
-			BIcon.Size = UDim2.new(0, 14, 0, 14)
-			BIcon.Position = UDim2.new(1, -28, 0.5, -7)
-			BIcon.BackgroundTransparency = 1
-			BIcon.Image = "rbxassetid://9728118892"
-			BIcon.ImageColor3 = T.SecondaryText
-			BIcon.ZIndex = 15
-			BIcon.Parent = Btn
 
 			Btn.MouseButton1Click:Connect(Callback)
 		end
@@ -454,8 +408,8 @@ function LuaLandMini:CreateWindow(Config)
 			BoxFrame.Parent = Container
 
 			local Box = Instance.new("TextBox")
-			Box.Size = UDim2.new(0.9, 0, 0.65, 0)
-			Box.Position = UDim2.new(0.05, 0, 0.175, 0)
+			Box.Size = UDim2.new(0.9, 0, 0, 26)
+			Box.Position = UDim2.new(0.05, 0, 0.5, -13)
 			Box.BackgroundColor3 = T.InputBg
 			Box.BorderSizePixel = 0
 			Box.PlaceholderText = Placeholder
